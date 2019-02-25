@@ -16,7 +16,7 @@ if config:
     currentStatus = config['current_status']
 else:
     print("config file not exist")
-    raise
+    raise Exception("config file not exist")
 
 """
 Database list so far:

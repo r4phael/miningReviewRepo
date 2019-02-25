@@ -1,14 +1,1 @@
-{
-    "has_db": "n",
-    "current_status": "open",
-    "host": "YOUR_HOST",
-    "db_name": "DATABASE_NAME",
-    "user": "DATABASE_USERNAME",
-    "password": "DATABASE_PASSWORD",
-    "status_list":
-    [
-	{"status": "open"},
-	{"status": "merged"},
-	{"status": "abandoned"}
-    ]
-}
+{"has_db": "y", "current_status": "merged", "host": "localhost", "db_name": "gm_aosp", "user": "r4ph", "password": "123456", "status_list": [{"status": "open"}, {"status": "merged"}, {"status": "abandoned"}]}

@@ -5,12 +5,13 @@ import datetime
 
 class Util(ChangeUtil):
     def __init__(self, host, user, password, dbName, hasDB, status):
-        ChangeUtil.__init__(self, host, user, password, dbName, hasDB, status)
-        self.num = 100
+        ChangeUtil.__init__(self, host, user, password, dbName, hasDB, status, None)
+        self.num = 5
         self.status = status
         if dbName == 'gm_aosp':
-            self.span = 500
+            self.span = 5
             # self.statuses = ['open', 'merged', 'abandoned']
+            self.urlComments = 'http://android-review.googlesource.com/changes/%s/revisions/%s/comments'
             self.url = 'https://android-review.googlesource.com/changes/?o=ALL_REVISIONS&o=ALL_FILES&o=ALL_COMMITS&o=MESSAGES&o=DETAILED_ACCOUNTS&n=%s' %self.num
             self.getChangesUseS(dbName)
         elif dbName == 'gm_qt':
@@ -48,6 +49,7 @@ class Util(ChangeUtil):
         while isMore:
             # Set status parameter and S parameter to url.
             url = self.url + '&q=status:%s&S=%s' %(self.status, span)
+            #url = 'https://android-review.googlesource.com/changes/888614/'
             print('status: ' + self.status + ', from ' + str(span) + ' to ' + str(span + self.span))
             # The respond data looks like )]}'[...]
             changeStr = urllib.urlopen(url).read()[4:]
@@ -58,7 +60,7 @@ class Util(ChangeUtil):
             if len(changeJson) is 0:
                 isMore = False
             else:
-                self.convertToBeans(changeJson)
+                self.convertToBeans(changeJson, self.urlComments)
             span = span + self.span
         print('...' + dbName.split('gm_')[1] + ' done...')
 

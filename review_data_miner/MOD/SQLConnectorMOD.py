@@ -108,6 +108,21 @@ class MysqlDBConnector:
                         ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
                         )
 
+                # t_inlineComments table
+                TABLES['t_inline_comments'] = (
+                        "CREATE TABLE t_inline_comments ("
+                        " id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+                        " i_commentId VARCHAR(64) DEFAULT NULL,"
+                        " i_message LONGTEXT DEFAULT NULL,"
+                        " i_file VARCHAR(64) DEFAULT NULL,"
+                        " i_line INT(11) DEFAULT NULL,"
+                        " i_updatedTime DATETIME DEFAULT NULL,"
+                        " i_unresolved VARCHAR(20) DEFAULT NULL,"
+                        " i_accountId INT(11) DEFAULT NULL,"
+                        " i_revisionId INT(11) DEFAULT NULL"
+                        ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
+                )
+
                 for name, sql in TABLES.iteritems():
                         self.cursor.execute(sql)
 
@@ -130,6 +145,7 @@ class MysqlDBConnector:
                                 self.saveRevisions(change)
                                 # Save histories.
                                 self.saveHistories(change)
+
                                 
         """
         This function save revisions data to database.
@@ -148,6 +164,9 @@ class MysqlDBConnector:
                         # Get the primary key id (It was auto incremented.).
                         revision.id = self.cursor.lastrowid
                         self.saveFiles(revision)
+
+                        #Save People anda Inline Comments
+                        self.saveInlineComments(revision)
                   
         """
         This function save files data to database.
@@ -177,6 +196,7 @@ class MysqlDBConnector:
                         self.cursor.execute(sql, data)
                         self.db.commit()
                         self.savePeople(history);
+
                         
         def savePeople(self, history):
                 sql = 'insert into t_people(p_accountId, p_name, p_email, p_userName) values(%s, %s, %s, %s)'
@@ -193,7 +213,28 @@ class MysqlDBConnector:
                         return True
                 else:
                         return False
-                
+
+        def savePeopleComments(self, inlineComments):
+                sql = 'insert into t_people(p_accountId, p_name, p_email) values(%s, %s, %s)'
+                if self.ifExistsPeople(inlineComments.authorAccountId) == False and inlineComments.authorAccountId != '':
+                        data = (inlineComments.authorAccountId, inlineComments.authorName, inlineComments.email)
+                        self.cursor.execute(sql, data)
+                        self.db.commit()
+
+        """
+        This function save comments data to database.
+        """
+
+        def saveInlineComments(self, revision):
+                for inlineComments in revision.inlineComments:
+                        sql = 'insert into t_inline_comments(i_commentId, i_accountId, i_message, i_updatedTime, i_unresolved, i_file, i_line, i_revisionId) values(%s, %s, %s, %s, %s, %s, %s, %s) '
+                        data = (inlineComments.commentId, inlineComments.authorAccountId, inlineComments.message,
+                                inlineComments.updatedTime, inlineComments.unresolved, inlineComments.file, inlineComments.line, revision.id)
+                        print('###SQL####.......' + sql % data)
+                        self.cursor.execute(sql, data)
+                        self.db.commit()
+                        print("Saved inlineComments in Database...")
+
         """
         This function checks if current data exists in the database.
         """
@@ -245,7 +286,7 @@ class MysqlDBConnector:
                         clause = 'ABANDONED'
                 else:
                         print("SQL: status error")
-                        raise
+                        raise Exception("SQL: status error")
                 sql = 'SELECT count(*) FROM %s.t_change where ch_status = "%s"' %(self.dbName, clause)
                 print(sql)
                 self.cursor.execute(sql)

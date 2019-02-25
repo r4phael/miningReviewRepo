@@ -28,6 +28,7 @@ class Revision:
         patchSetNum = None
         changeId = None
         files = []
+        inlineComments = []
 
 """
 This class corresponds to t_history table in the database.
@@ -63,3 +64,15 @@ class People:
         authorName = None
         email = None
         authorUserName = None
+
+"""
+This class corresponds to t_inline_comments table in the database.
+"""
+class InlineComments:
+        id = None
+        commentId = None
+        message = None
+        file = None
+        line = None
+        updatedTime = None
+        unresolved = None
