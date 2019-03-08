@@ -6,10 +6,10 @@ import datetime
 class Util(ChangeUtil):
     def __init__(self, host, user, password, dbName, hasDB, status):
         ChangeUtil.__init__(self, host, user, password, dbName, hasDB, status, None)
-        self.num = 5
+        self.num = 100
         self.status = status
         if dbName == 'gm_aosp':
-            self.span = 5
+            self.span = 500
             # self.statuses = ['open', 'merged', 'abandoned']
             self.urlComments = 'http://android-review.googlesource.com/changes/%s/revisions/%s/comments'
             self.url = 'https://android-review.googlesource.com/changes/?o=ALL_REVISIONS&o=ALL_FILES&o=ALL_COMMITS&o=MESSAGES&o=DETAILED_ACCOUNTS&n=%s' %self.num

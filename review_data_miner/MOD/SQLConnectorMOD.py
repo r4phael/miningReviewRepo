@@ -112,9 +112,9 @@ class MysqlDBConnector:
                 TABLES['t_inline_comments'] = (
                         "CREATE TABLE t_inline_comments ("
                         " id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
-                        " i_commentId VARCHAR(64) DEFAULT NULL,"
+                        " i_commentId VARCHAR(65) DEFAULT NULL,"
                         " i_message LONGTEXT DEFAULT NULL,"
-                        " i_file VARCHAR(64) DEFAULT NULL,"
+                        " i_file VARCHAR(255) DEFAULT NULL,"
                         " i_line INT(11) DEFAULT NULL,"
                         " i_updatedTime DATETIME DEFAULT NULL,"
                         " i_unresolved VARCHAR(20) DEFAULT NULL,"

@@ -37,7 +37,7 @@ class ChangeUtil:
         # A list of Change objects
         changeList = []
         for change in changeJson:
-            print('Number of Changes .... ' + str(len(changeList)))
+            print('List of Changes .... ' + str(len(changeList)))
             changeObj = Change()
             changeObj.uniqueChangeId = change['id']
             changeObj.changeId = change['change_id']
@@ -156,7 +156,12 @@ class ChangeUtil:
                             commentInlineObject.unresolved = message['unresolved']
                             commentInlineObject.commentId = message['id']
                             commentInlineObject.file = key
-                            commentInlineObject.line = message['line']
+
+                            if 'line' in message.keys():
+                                commentInlineObject.line = message['line']
+                            else:
+                                commentInlineObject.line = 0
+
                             atts = vars(commentInlineObject)
                             # print ', '.join("%s: %s" % item for item in atts.items())
                             commentInlinesList.append(commentInlineObject)
